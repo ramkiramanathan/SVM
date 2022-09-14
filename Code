@@ -1,0 +1,68 @@
+**Import libraries**
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from  sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import f1_score,accuracy_score,plot_roc_curve,roc_auc_score,confusion_matrix
+
+**Importing the dataset**
+
+df = pd.read_csv("/content/Social_Network_Ads.csv")
+
+df.shape
+
+df.head()
+
+df.drop_duplicates()
+
+df.drop('User ID',axis=1,inplace = True)
+
+df.Gender.replace(['Male','Female'],[1,0],inplace = True)
+
+df.head()
+
+**Splitting the dataset into the Training set and Test set**
+
+X = df.loc[:,['Gender', 'Age', 'EstimatedSalary']].values
+Y = df.loc[:,'Purchased']
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2)
+
+**Feature Scaling**
+
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = scaler.transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+**Fitting SVM to the Training set**
+
+from sklearn.svm import SVC
+classifier = SVC(kernel = 'rbf')
+classifier.fit(X_train_scaled,Y_train)
+
+
+**Predicting the Test set results**
+
+Y_pred = classifier.predict(X_test_scaled)
+
+**Making the Confusion Matrix**
+
+confusion_matrix(Y_test,Y_pred)
+
+plot_roc_curve(classifier,X_test_scaled,Y_test)
+
+Checking with other Kernel as well
+
+l = ['linear','sigmoid','polynomial']
+for i in l:
+  classifier = SVC(kernel = 'rbf')
+  classifier.fit(X_train_scaled,Y_train)
+  Y_pred = classifier.predict(X_test_scaled)
+  plot_roc_curve(classifier,X_test_scaled,Y_test)
+
