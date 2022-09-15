@@ -61,7 +61,7 @@ Checking with other Kernel as well
 
 l = ['linear','sigmoid','polynomial']
 for i in l:
-  classifier = SVC(kernel = 'rbf')
+  classifier = SVC(kernel = i)
   classifier.fit(X_train_scaled,Y_train)
   Y_pred = classifier.predict(X_test_scaled)
   plot_roc_curve(classifier,X_test_scaled,Y_test)
